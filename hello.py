@@ -12,13 +12,17 @@ class NameForm(FlaskForm):
 
 app = Flask(__name__)
 
+import os
+SECRET_KEY = os.urandom(32)
+app.config['SECRET_KEY'] = SECRET_KEY
+
 bootstrap = Bootstrap(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     name = None
     form = NameForm()
-    if form.validatie_on_submit():
+    if form.validate_on_submit():
         name = form.name.data
         form.name.data = ''
     return render_template('index.html', form=form, name=name)
