@@ -1,10 +1,16 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from datetime import datetime
 
+
+from flask_wtf.csrf import CSRFProtect
+
+# CSRF protection
+
+csrf = CSRFProtect()
 
 class NameForm(FlaskForm):
     name = StringField("What is your name?", validators=[DataRequired()])
@@ -13,10 +19,17 @@ class NameForm(FlaskForm):
 app = Flask(__name__)
 
 import os
+
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+csrf.init_app(app)
+
 bootstrap = Bootstrap(app)
+
+
+# Routes
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
